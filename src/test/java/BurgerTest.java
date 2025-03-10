@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -5,25 +6,25 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import praktikum.*;
 
-
+import org.assertj.core.api.SoftAssertions;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BurgerTest {
 
-    private final String NAME_BUN = "Флюоресцентная булка R2-D3";
-    private final float PRICE_BUN = 988.0f;
+    private final String nameBun = "Флюоресцентная булка R2-D3";
+    private final float priceBun = 988.0f;
 
-    private final String NAME_INGREDIENT_FILLING = "Мясо бессмертных моллюсков Protostomia";
-    private final float PRICE_INGREDIENT_FILLING = 1337.0f;
-    private final IngredientType TYPE_FILLING = IngredientType.FILLING;
+    private final String nameIngredientFilling = "Мясо бессмертных моллюсков Protostomia";
+    private final float priceIngredientFilling = 1337.0f;
+    private final IngredientType typeFilling = IngredientType.FILLING;
 
-    private final String NAME_INGREDIENT_SAUCE = "Соус традиционный галактический";
-    private final float PRICE_INGREDIENT_SAUCE = 15.0f;
-    private final IngredientType TYPE_SAUCE = IngredientType.SAUCE;
+    private final String nameIngredientSauce = "Соус традиционный галактический";
+    private final float priceIngredientSauce = 15.0f;
+    private final IngredientType typeSauce = IngredientType.SAUCE;
 
-    private final float DELTA = 0.0001f;
+    private final float delta = 0.0001f;
 
     @Mock
     private Bun mockBun;
@@ -37,25 +38,39 @@ public class BurgerTest {
     @InjectMocks
     private Burger burger;
 
+    @Before
+    public void before() {
+        when(mockBun.getName()).thenReturn(nameBun);
+        when(mockIngredientFilling.getName()).thenReturn(nameIngredientFilling);
+        when(mockIngredientSauce.getName()).thenReturn(nameIngredientSauce);
+
+        when(mockBun.getPrice()).thenReturn(priceBun);
+        when(mockIngredientFilling.getPrice()).thenReturn(priceIngredientFilling);
+        when(mockIngredientSauce.getPrice()).thenReturn(priceIngredientSauce);
+
+        when(mockIngredientFilling.getType()).thenReturn(typeFilling);
+        when(mockIngredientSauce.getType()).thenReturn(typeSauce);
+    }
+
     @Test
     public void setBunsTest() {
         burger.setBuns(mockBun);
-        assertEquals(mockBun, burger.bun);
+        assertEquals("Ошибка: Булка не установлена", mockBun, burger.bun);
     }
 
     @Test
     public void addIngredientTest() {
         burger.addIngredient(mockIngredientFilling);
-        assertEquals(1, burger.ingredients.size());
+        assertEquals("Ошибка: Ингредиент не добавлен.", 1, burger.ingredients.size());
     }
 
     @Test
     public void removeIngredientTest() {
         burger.addIngredient(mockIngredientFilling);
-        assertEquals(1, burger.ingredients.size());
+        assertEquals("Ошибка: Ингредиент не добавлен.", 1, burger.ingredients.size());
 
         burger.removeIngredient(0);
-        assertEquals(0, burger.ingredients.size());
+        assertEquals("Ошибка: Ингредиент не удалён.", 0, burger.ingredients.size());
     }
 
     @Test
@@ -65,38 +80,25 @@ public class BurgerTest {
 
         burger.moveIngredient(0, 1);
 
-        assertEquals(mockIngredientSauce, burger.ingredients.get(0));
-        assertEquals(mockIngredientFilling, burger.ingredients.get(1));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(burger.ingredients.get(0)).as("Ошибка: Соус не изменил своё первоначальное место").isEqualTo(mockIngredientSauce);
+        softly.assertThat(burger.ingredients.get(1)).as("Ошибка: Начинка не изменила своё первоначальное место").isEqualTo(mockIngredientFilling);
+        softly.assertAll();
     }
 
     @Test
     public void getPriceTest() {
-        when(mockBun.getPrice()).thenReturn(PRICE_BUN);
-        when(mockIngredientFilling.getPrice()).thenReturn(PRICE_INGREDIENT_FILLING);
-        when(mockIngredientSauce.getPrice()).thenReturn(PRICE_INGREDIENT_SAUCE);
-
         burger.setBuns(mockBun);
         burger.addIngredient(mockIngredientFilling);
         burger.addIngredient(mockIngredientSauce);
 
         float mockPrice = mockBun.getPrice() * 2 + mockIngredientFilling.getPrice() + mockIngredientSauce.getPrice();
 
-        assertEquals(mockPrice, burger.getPrice(), DELTA);
+        assertEquals("Ошибка: Цена бургера не возвращена!", mockPrice, burger.getPrice(), delta);
     }
 
     @Test
     public void getReceiptTest() {
-        when(mockBun.getName()).thenReturn(NAME_BUN);
-        when(mockIngredientFilling.getName()).thenReturn(NAME_INGREDIENT_FILLING);
-        when(mockIngredientSauce.getName()).thenReturn(NAME_INGREDIENT_SAUCE);
-
-        when(mockBun.getPrice()).thenReturn(PRICE_BUN);
-        when(mockIngredientFilling.getPrice()).thenReturn(PRICE_INGREDIENT_FILLING);
-        when(mockIngredientSauce.getPrice()).thenReturn(PRICE_INGREDIENT_SAUCE);
-
-        when(mockIngredientFilling.getType()).thenReturn(TYPE_FILLING);
-        when(mockIngredientSauce.getType()).thenReturn(TYPE_SAUCE);
-
         burger.setBuns(mockBun);
         burger.addIngredient(mockIngredientFilling);
         burger.addIngredient(mockIngredientSauce);
@@ -115,6 +117,6 @@ public class BurgerTest {
                 mockBun.getName(),
                 mockPrice);
 
-        assertEquals(expectReceipt, burger.getReceipt());
+        assertEquals("Ошибка: Чек не соответствует добавленным ингредиентам", expectReceipt, burger.getReceipt());
     }
 }

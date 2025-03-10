@@ -5,26 +5,26 @@ import praktikum.IngredientType;
 import static org.junit.Assert.assertEquals;
 
 public class IngredientTest {
-    private final String NAME = "Говяжий метеорит (отбивная)";
-    private final float PRICE = 3000.0f;
-    private final IngredientType TYPE = IngredientType.FILLING;
+    private final String name = "Говяжий метеорит (отбивная)";
+    private final float price = 3000.0f;
+    private final IngredientType type = IngredientType.FILLING;
 
-    private final float DELTA = 0.0001f;
+    private final float delta = 0.0001f;
 
-    Ingredient ingredient = new Ingredient(TYPE, NAME, PRICE);
+    Ingredient ingredient = new Ingredient(type, name, price);
 
     @Test
     public void getPriceTest() {
-        assertEquals(PRICE, ingredient.getPrice(), DELTA);
+        assertEquals("Ошибка: Цена ингредиента не возвращена!",price, ingredient.getPrice(), delta);
     }
 
     @Test
     public void getNameTest() {
-        assertEquals(NAME, ingredient.getName());
+        assertEquals("Ошибка: Название ингредиента не возвращено!", name, ingredient.getName());
     }
 
     @Test
     public void getTypeTest() {
-        assertEquals(TYPE, ingredient.getType());
+        assertEquals("Ошибка: Тип ингредиента не возвращен!", type, ingredient.getType());
     }
 }
