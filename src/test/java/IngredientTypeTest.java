@@ -13,11 +13,14 @@ public class IngredientTypeTest {
     }
 
     @Test
-    public void enumValueOfTest() {
+    public void enumSauceValueOfTest() {
         assertThat(IngredientType.valueOf("SAUCE"))
                 .as("Проверяем, что valueOf('SAUCE') возвращает SAUCE")
                 .isEqualTo(IngredientType.SAUCE);
+    }
 
+    @Test
+    public void enumFillingValueOfTest() {
         assertThat(IngredientType.valueOf("FILLING"))
                 .as("Проверяем, что valueOf('FILLING') возвращает FILLING")
                 .isEqualTo(IngredientType.FILLING);
