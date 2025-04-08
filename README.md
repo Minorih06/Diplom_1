@@ -1,5 +1,5 @@
 # Юнит-тесты для приложения Stellar Burgers
-Данный проект написан на языке Java 11 для покрытия кода приложения Stellar Burgers юнит-тестами.
+Данный проект написан на языке Java 11 для покрытия кода приложения [Stellar Burgers](https://stellarburgers.nomoreparties.site/) юнит-тестами.
 
 ## Задача 
 Покрыть тестами классы `Bun`, `Burger`, `Ingredient`, `IngredientType`. Процент покрытия данных классов должен быть не ниже 70%.
